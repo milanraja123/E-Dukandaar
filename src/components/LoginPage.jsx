@@ -61,7 +61,10 @@ const LoginPage = () => {
       
       navigate("/products");
     })
-    .catch((error)=>{console.log(error)})
+    .catch(()=>{
+      const element = document.getElementById("errorMessage");
+      element.style.display = "block";
+    })
   }
 
   return (
@@ -122,13 +125,14 @@ const LoginPage = () => {
               autoComplete="off"
               required
             />
+            <p id="errorMessage" style={{margin:"0.45rem 0 0 0",padding:"0.45rem 0",color:"red",display:"none"}}>Wrong credential.. Please check and try again</p>
             <a href="#">Forgot your password?</a>
             <Button onClick={postSignInData}>Sign In</Button>
           </Form>
         </SignInContainer>
 
         <OverlayContainer signIn={signIn}>
-          <Overlay signIn={signIn}>
+          <Overlay signIn={signIn}> 
             <LeftOverlayPanel signIn={signIn}>
               <h1>Welcome Back!</h1>
               <p>

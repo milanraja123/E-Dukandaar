@@ -48,7 +48,7 @@ const LoginPage = () => {
         });
         getAuthen(true);
         console.log(isAuthenticated);
-        navigate("/products");
+        navigate("/");
       })
       .catch((error) => console.log("Error-> ", error));
   };
@@ -59,7 +59,7 @@ const LoginPage = () => {
     .then(()=>{
       getAuthen(true);
       
-      navigate("/products");
+      navigate("/");
     })
     .catch(()=>{
       const element = document.getElementById("errorMessage");

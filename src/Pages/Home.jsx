@@ -1,14 +1,22 @@
-import HeroSection from "../components/HeroSection"
-import Services from "../components/Services"
+
+import HeroSection from "../components/HeroSection";
+import MyCarousal from "../components/MyCarousal";
+import Services from "../components/Services";
+import { useProductContext } from "../context/ProductContext";
 
 
 const Home = () => {
+  const {isAuthenticated} = useProductContext();
+  
+ 
   return (
     <>
-        <HeroSection />
-        <Services />
+      <HeroSection />
+      {isAuthenticated ? <MyCarousal /> : ""}
+     
+      <Services />
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

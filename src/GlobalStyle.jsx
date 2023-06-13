@@ -52,6 +52,15 @@ li {
 }
 
 
+
+
+.img{
+  img{
+    width: 100%;
+  height: auto;
+  }
+  
+}
 .container {
   max-width: 120rem;
   margin: 0 auto;

@@ -3,10 +3,11 @@ import Sort from "../components/Sort";
 import ProductList from "../components/ProductList";
 import FilteredData from "../components/FilteredData";
 import { useProductContext } from "../context/ProductContext";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import LoginPage from "../components/LoginPage";
 
 const Product = () => {
-  const navigate = useNavigate();
+  
   const { isAuthenticated } = useProductContext();
   if (isAuthenticated) {
     return (
@@ -30,8 +31,8 @@ const Product = () => {
       </>
     );
   } else {
-    return <>{navigate("/login")}
-    
+    return <>
+    <LoginPage />
     </>;
   }
 };

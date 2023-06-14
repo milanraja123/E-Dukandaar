@@ -5,14 +5,18 @@ import { Container } from "../styles/Container";
 import { SignInContainer } from "../styles/SignInContainer";
 import { SignUpContainer } from "../styles/SignUpContainer";
 import { Form } from "../styles/Form";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 
 import { useNavigate } from "react-router-dom";
 import { useProductContext } from "../context/ProductContext";
 import { auth } from "../Authentication/Firebase";
 
 const LoginPage = () => {
-  const {getAuthen,isAuthenticated} = useProductContext();
+  const { getAuthen, isAuthenticated } = useProductContext();
   const navigate = useNavigate();
   const [signIn, toggle] = useState(true);
 
@@ -39,37 +43,50 @@ const LoginPage = () => {
 
   const postSignUpData = (e) => {
     e.preventDefault();
-
-    createUserWithEmailAndPassword(auth, signUpData.email, signUpData.pass)
-      .then(async (res) => {
-        const user = res.user;
-        await updateProfile(user, {
-          displayName: signUpData.name,
-        });
-        getAuthen(true);
-        console.log(isAuthenticated);
-        navigate("/");
-      })
-      .catch((error) => console.log("Error-> ", error));
+    const element = document.getElementById("signUpBtn");
+    element.textContent = "";
+    const para = document.createElement("span");
+    para.classList.add("loader");
+    element.appendChild(para);
+    setTimeout(() => {
+      createUserWithEmailAndPassword(auth, signUpData.email, signUpData.pass)
+        .then(async (res) => {
+          const user = res.user;
+          await updateProfile(user, {
+            displayName: signUpData.name,
+          });
+          getAuthen(true);
+          console.log(isAuthenticated);
+          navigate("/");
+        })
+        .catch((error) => console.log("Error-> ", error));
+    }, 1000);
   };
   const postSignInData = (e) => {
     e.preventDefault();
+    const element = document.getElementById("signInBtn");
+    element.textContent = "";
+    const para = document.createElement("span");
 
-    signInWithEmailAndPassword(auth,signInData.email,signInData.pass)
-    .then(()=>{
-      getAuthen(true);
-      
-      navigate("/");
-    })
-    .catch(()=>{
-      const element = document.getElementById("errorMessage");
-      element.style.display = "block";
-    })
-  }
+    para.classList.add("loader");
+    element.appendChild(para);
+    setTimeout(() => {
+      signInWithEmailAndPassword(auth, signInData.email, signInData.pass)
+        .then(() => {
+          getAuthen(true);
+
+          navigate("/");
+        })
+        .catch(() => {
+          const element = document.getElementById("errorMessage");
+          element.style.display = "block";
+        });
+    }, 1000);
+  };
 
   return (
     <Wrapper>
-      <Container style={{width:"60vw"}}>
+      <Container style={{ width: "60vw" }}>
         <SignUpContainer signIn={signIn}>
           <Form method="POST">
             <h1>Create Account</h1>
@@ -100,7 +117,7 @@ const LoginPage = () => {
               autoComplete="off"
               required
             />
-            <Button onClick={postSignUpData}>Sign Up</Button>
+            <Button onClick={postSignUpData} id="signUpBtn">Sign Up</Button>
           </Form>
         </SignUpContainer>
 
@@ -125,14 +142,26 @@ const LoginPage = () => {
               autoComplete="off"
               required
             />
-            <p id="errorMessage" style={{margin:"0.45rem 0 0 0",padding:"0.45rem 0",color:"red",display:"none"}}>Wrong credential.. Please check and try again</p>
+            <p
+              id="errorMessage"
+              style={{
+                margin: "0.45rem 0 0 0",
+                padding: "0.45rem 0",
+                color: "red",
+                display: "none",
+              }}
+            >
+              Wrong credential.. Please check and try again
+            </p>
             <a href="#">Forgot your password?</a>
-            <Button onClick={postSignInData}>Sign In</Button>
+            <Button onClick={postSignInData} id="signInBtn">
+              Sign In
+            </Button>
           </Form>
         </SignInContainer>
 
         <OverlayContainer signIn={signIn}>
-          <Overlay signIn={signIn}> 
+          <Overlay signIn={signIn}>
             <LeftOverlayPanel signIn={signIn}>
               <h1>Welcome Back!</h1>
               <p>
@@ -151,7 +180,7 @@ const LoginPage = () => {
       </Container>
     </Wrapper>
   );
-}
+};
 
 const Wrapper = styled.section`
   background: rgb(255, 255, 255);
@@ -189,6 +218,25 @@ const Wrapper = styled.section`
     margin: 8px 0;
     width: 100%;
   }
+  .loader {
+    width: 2rem;
+    height: 2rem;
+    border: 5px solid #fff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
 const GhostButton = styled(Button)`
@@ -205,8 +253,7 @@ const OverlayContainer = styled.div`
   overflow: hidden;
   transition: transform 0.6s ease-in-out;
   z-index: 100;
-  ${(props) =>
-    props.signIn !== true ? `transform: translateX(-100%);` : null}
+  ${(props) => (props.signIn !== true ? `transform: translateX(-100%);` : null)}
 `;
 
 const Overlay = styled.div`

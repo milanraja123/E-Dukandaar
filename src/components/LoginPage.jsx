@@ -43,11 +43,11 @@ const LoginPage = () => {
 
   const postSignUpData = (e) => {
     e.preventDefault();
-    const element = document.getElementById("signUpBtn");
-    element.textContent = "";
+    const element1 = document.getElementById("signUpBtn");
+    element1.textContent = "";
     const para = document.createElement("span");
     para.classList.add("loader");
-    element.appendChild(para);
+    element1.appendChild(para);
     setTimeout(() => {
       createUserWithEmailAndPassword(auth, signUpData.email, signUpData.pass)
         .then(async (res) => {
@@ -59,27 +59,33 @@ const LoginPage = () => {
           console.log(isAuthenticated);
           navigate("/");
         })
-        .catch((error) => console.log("Error-> ", error));
+        .catch(() => {
+          const element = document.getElementById("errorMessageSignUp");
+          element.style.display = "block";
+          element1.removeChild(para);
+          element1.textContent = "Sign Out";
+        });
     }, 1000);
   };
   const postSignInData = (e) => {
     e.preventDefault();
-    const element = document.getElementById("signInBtn");
-    element.textContent = "";
+    const element1 = document.getElementById("signInBtn");
+    element1.textContent = "";
     const para = document.createElement("span");
 
     para.classList.add("loader");
-    element.appendChild(para);
+    element1.appendChild(para);
     setTimeout(() => {
       signInWithEmailAndPassword(auth, signInData.email, signInData.pass)
         .then(() => {
           getAuthen(true);
-
           navigate("/");
         })
         .catch(() => {
-          const element = document.getElementById("errorMessage");
+          const element = document.getElementById("errorMessageSignIn");
           element.style.display = "block";
+          element1.removeChild(para);
+          element1.textContent = "Sign In"
         });
     }, 1000);
   };
@@ -117,6 +123,17 @@ const LoginPage = () => {
               autoComplete="off"
               required
             />
+            <p
+              id="errorMessageSignUp"
+              style={{
+                margin: "0.45rem 0 0 0",
+                padding: "0.45rem 0",
+                color: "red",
+                display: "none",
+              }}
+            >
+              Something went wrong.. Please try again
+            </p>
             <Button onClick={postSignUpData} id="signUpBtn">Sign Up</Button>
           </Form>
         </SignUpContainer>
@@ -143,7 +160,7 @@ const LoginPage = () => {
               required
             />
             <p
-              id="errorMessage"
+              id="errorMessageSignIn"
               style={{
                 margin: "0.45rem 0 0 0",
                 padding: "0.45rem 0",

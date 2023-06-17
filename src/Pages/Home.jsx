@@ -13,7 +13,6 @@ const Home = () => {
     <>
       <HeroSection />
       {isAuthenticated ? <MyCarousal /> : ""}
-     
       <Services />
     </>
   );

@@ -7,6 +7,8 @@ const AppContext = createContext();
 const initialState = {
   products: [],
   singleProduct:{},
+  isLoading:false,
+  isError:false,
   isAuthenticated:false,
 };
 
@@ -17,6 +19,7 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const getProducts = async (url) => {
+    dispatch({type:"SET_LOADING"})
     try {
       const res = await axios.get(url);
       const product = await res.data;
